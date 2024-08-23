@@ -29,6 +29,14 @@ use crate::response::AuthMethodResponse;
 use crate::response::CommandResponse;
 use crate::transfer::copy_data;
 
+#[macro_use]
+extern crate windows_service;
+
+use std::ffi::OsString;
+use windows_service::service_dispatcher;
+
+define_windows_service!(ffi_service_main, my_service_main);
+
 const SOCKS5_VERSION: u8 = 0x05;
 
 macro_rules! log_error {
@@ -44,11 +52,11 @@ macro_rules! log_error {
     }};
 }
 
-fn main() -> Result<(), Box<dyn Error>> {
-    env_logger::init();
+//sc create YoutubeDPI binPath= "C:\no-dpi-socks.exe" type=own start=auto
 
+fn my_service_main(arguments: Vec<OsString>) {
     let arguments = Arguments::parse();
-    let runtime = Builder::new_multi_thread().enable_io().build()?;
+    let runtime = Builder::new_multi_thread().enable_io().build().expect("!!!!!");
     let context = Context::create(arguments, runtime);
 
     context.runtime().block_on(async {
@@ -79,6 +87,12 @@ fn main() -> Result<(), Box<dyn Error>> {
             }
         }
     });
+}
+
+fn main() -> Result<(), windows_service::Error> {
+    env_logger::init();
+
+    service_dispatcher::start("myservice", ffi_service_main)?;
 
     Ok(())
 }

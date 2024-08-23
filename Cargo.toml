@@ -10,7 +10,8 @@ clap_derive = "4.5"
 dns-lookup = "2.0"
 env_logger = "0.11"
 log = "0.4"
+windows-service = "0.7"
 
 [dependencies.tokio]
 version = "1.39"
-features = [ "rt", "rt-multi-thread", "net", "io-util", "macros" ]
+features = ["rt", "rt-multi-thread", "net", "io-util", "macros"]
